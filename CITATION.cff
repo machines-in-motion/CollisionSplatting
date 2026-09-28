@@ -12,7 +12,7 @@ authors:
   - family-names: Righetti
     given-names: Ludovic
 repository-code: "https://github.com/machines-in-motion/CollisionSplatting"
-license: BSD-3-Clause
+license: GPL-3.0
 preferred-citation:
   type: conference-paper
   title: "CollisionSplatting: Collision-Aware Motion Planning in 3DGS Scenes with Image-Conditioned Objectives and Adjustable Conservatism"

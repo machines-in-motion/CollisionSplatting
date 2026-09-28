@@ -140,6 +140,10 @@ radius adapts to the robot and splat sizes and is typically several times faster
 }
 ```
 
+## License
+
+Released under the [GNU General Public License v3.0](LICENSE).
+
 ## Acknowledgements
 
 Built on [NVIDIA Warp](https://github.com/NVIDIA/warp) and [gsplat](https://github.com/nerfstudio-project/gsplat).
