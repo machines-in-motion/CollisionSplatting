@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use CollisionSplatting, please cite the paper."
+title: "CollisionSplatting"
+type: software
+authors:
+  - family-names: Khorrambakht
+    given-names: Rooholla
+  - family-names: Ortiz-Haro
+    given-names: Joaquim
+  - family-names: Weiss
+    given-names: Stephan
+  - family-names: Righetti
+    given-names: Ludovic
+repository-code: "https://github.com/machines-in-motion/CollisionSplatting"
+license: BSD-3-Clause
+preferred-citation:
+  type: conference-paper
+  title: "CollisionSplatting: Collision-Aware Motion Planning in 3DGS Scenes with Image-Conditioned Objectives and Adjustable Conservatism"
+  authors:
+    - family-names: Khorrambakht
+      given-names: Rooholla
+    - family-names: Ortiz-Haro
+      given-names: Joaquim
+    - family-names: Weiss
+      given-names: Stephan
+    - family-names: Righetti
+      given-names: Ludovic
+  collection-title: "IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)"
+  year: 2026

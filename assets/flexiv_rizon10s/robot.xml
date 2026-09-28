@@ -1,0 +1,115 @@
+<mujoco model="rizon10s">
+  <compiler angle="radian" meshdir=""/>
+  <asset>
+    <mesh name="link0" file="meshes/visual/base_link.obj"/>
+    <mesh name="c_link0" file="meshes/collision/c_link0.stl"/>
+    <mesh name="link1" file="meshes/visual/link1.obj"/>
+    <mesh name="v_ring1" file="meshes/visual/v_ring_s1.obj" />
+    <mesh name="c_link1" file="meshes/collision/c_link1.stl"/>
+    <mesh name="link2" file="meshes/visual/link2.obj"/>
+    <mesh name="v_ring2" file="meshes/visual/v_ring_s2.obj" />
+    <mesh name="c_link2" file="meshes/collision/c_link2.stl"/>
+    <mesh name="link3" file="meshes/visual/link3.obj"/>
+    <mesh name="v_ring3" file="meshes/visual/v_ring_s3.obj" />
+    <mesh name="c_link3" file="meshes/collision/c_link3.stl"/>
+    <mesh name="link4" file="meshes/visual/link4.obj"/>
+    <mesh name="v_ring4" file="meshes/visual/v_ring_s4.obj" />
+    <mesh name="c_link4" file="meshes/collision/c_link4.stl"/>
+    <mesh name="link5" file="meshes/visual/link5.obj"/>
+    <mesh name="v_ring5" file="meshes/visual/v_ring_s5.obj" />
+    <mesh name="c_link5" file="meshes/collision/c_link5.stl"/>
+    <mesh name="link6" file="meshes/visual/link6.obj"/>
+    <mesh name="v_ring6" file="meshes/visual/v_ring_s6.obj" />
+    <mesh name="c_link6" file="meshes/collision/c_link6.stl"/>
+    <mesh name="link7" file="meshes/visual/link7.obj"/>
+    <mesh name="v_ring7" file="meshes/visual/v_ring_s7.obj" />
+    <mesh name="c_link7" file="meshes/collision/c_link7.stl"/>
+
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+  </asset>
+
+
+
+  <worldbody>
+
+  <body>
+      <camera name="static_camera" pos="1 0 1" quat="0.6830127 0.1830127 0.1830127 0.6830127" />
+    <!--https://www.andre-gaschler.com/rotationconverter/-->
+    <!--      ZYX 30 0 90-->
+    <!--change quaternion convention-->
+  </body>
+
+
+  <geom name="floor" size=".7 1.5 .1" pos=".5 .0 0 " type="plane"/>
+
+
+    <geom name="shell-0" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.4 0.4 0.4 1" mesh="link0"/>
+    <geom name="hull-0" type="mesh" rgba="1 1 1 1" mesh="c_link0"/>
+    <body name="link1" pos="0 0 0.21" quat="0 0 0 -1">
+      <inertial pos="0 0.03 0.16" quat="0.997217 0.0745555 0 0" mass="9.7" diaginertia="0.18 0.173007 0.0369926"/>
+      <joint name="joint1" pos="0 0 0" axis="0 0 1" limited="true" range="-2.7925 2.7925"/>
+      <geom name="shell-1" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.4 0.4 0.4 1" mesh="link1"/>
+      <geom name="ring-1" pos="0 0 -0.0025" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="v_ring1"/>
+      <geom name="hull-1" type="mesh" rgba="1 1 1 1" mesh="c_link1"/>
+      <body name="link2" pos="0 0.0675 0.24">
+        <inertial pos="0 0.03 0.11" quat="0.985806 0.167886 0 0" mass="6.358" diaginertia="0.1 0.0870156 0.0229844"/>
+        <joint name="joint2" pos="0 0 0" axis="0 1 0" limited="true" range="-2.6704 2.6704"/>
+        <geom name="shell-2" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.4 0.4 0.4 1" mesh="link2"/>
+        <geom name="ring-2" pos="0 -0.0025 0" quat="0.707107 0.707107 0 0" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="v_ring2"/>
+        <geom name="hull-2" type="mesh" rgba="1 1 1 1" mesh="c_link2"/>
+        <body name="link3" pos="0 0.0625 0.2275">
+          <inertial pos="0 -0.03 0.17" quat="0.980785 -0.19509 0 0" mass="5.089" diaginertia="0.0266667 0.0266667 0.0266667"/>
+          <joint name="joint3" pos="0 0 0" axis="0 0 1" limited="true" range="-2.7925 2.7925"/>
+          <geom name="shell-3" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.4 0.4 0.4 1" mesh="link3"/>
+          <geom name="ring-3" pos="0 0 -0.0025" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="v_ring3"/>
+          <geom name="hull-3" type="mesh" rgba="1 1 1 1" mesh="c_link3"/>
+          <body name="link4" pos="0 -0.0625 0.2225" quat="0 0 0 -1">
+            <inertial pos="0 0.05 0.1" mass="3.267" diaginertia="0.03 0.03 0.01"/>
+            <joint name="joint4" pos="0 0 0" axis="0 1 0" limited="true" range="-2.7053 2.7053"/>
+            <geom name="shell-4" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.4 0.4 0.4 1" mesh="link4"/>
+            <geom name="ring-4" pos="0 -0.0025 0" quat="0.707107 0.707107 0 0" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="v_ring4"/>
+            <geom name="hull-4" type="mesh" rgba="1 1 1 1" mesh="c_link4"/>
+            <body name="link5" pos="0 0.0575 0.205" quat="0 0 0 -1">
+              <inertial pos="0 0.01 0.13" mass="2.498" diaginertia="0.01 0.01 0.001"/>
+              <joint name="joint5" pos="0 0 0" axis="0 0 1" limited="true" range="-2.9671 2.9671"/>
+              <geom name="shell-5" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.4 0.4 0.4 1" mesh="link5"/>
+              <geom name="ring-5" pos="0 0 -0.0025" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="v_ring5"/>
+              <geom name="hull-5" type="mesh" rgba="1 1 1 1" mesh="c_link5"/>
+              <body name="link6" pos="0 0.03 0.19">
+                <inertial pos="0.02 0.06 0.07" mass="2.340" diaginertia="0.01 0.01 0.001"/>
+                <joint name="joint6" pos="0 0 0" axis="0 1 0" limited="true" range="-1.3963 4.5379"/>
+                <geom name="shell-6" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.4 0.4 0.4 1" mesh="link6"/>
+                <geom name="ring-6" pos="0 -0.0025 0" quat="0.707107 0.707107 0 0" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="v_ring6"/>
+                <geom name="hull-6" type="mesh" rgba="1 1 1 1" mesh="c_link6"/>
+                <body name="link7" pos="-0.015 0.073 0.11" quat="0.707107 0 -0.707107 0">
+                  <!--todo: i changed the diag intertia to .01, instead of .001-->
+                  <inertial pos="0 0 0.05" mass="1.568" diaginertia="0.01 0.01 0.01"/>
+                  <joint name="joint7" pos="0 0 0" axis="0 0 1" limited="true" range="-2.9671 2.9671"/>
+                  <geom name="shell-7" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.4 0.4 0.4 1" mesh="link7"/>
+                  <geom name="ring-7" pos="0 0 -0.0025" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="v_ring7"/>
+                  <geom name="hull-7" type="mesh" rgba="1 1 1 1" mesh="c_link7"/>
+
+                  <camera name="camera_link7" pos=".1 0 0" quat="0. 0.7 0.7 0" />
+                  <!--YXZ 0 180 90-->
+                  <!--https://www.andre-gaschler.com/rotationconverter/-->
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor name="A1" joint="joint1" />
+    <motor name="A2" joint="joint2" />
+    <motor name="A3" joint="joint3" />
+    <motor name="A4" joint="joint4" />
+    <motor name="A5" joint="joint5" />
+    <motor name="A6" joint="joint6" />
+    <motor name="A7" joint="joint7" />
+  </actuator>
+
+
+</mujoco>

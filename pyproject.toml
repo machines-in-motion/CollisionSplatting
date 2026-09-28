@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "collisionsplatting"
+version = "1.0.0"
+description = "Collision-aware planning and control directly on standard 3D Gaussian Splatting scenes (IROS 2026)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Rooholla Khorrambakht" },
+  { name = "Joaquim Ortiz-Haro" },
+  { name = "Stephan Weiss" },
+  { name = "Ludovic Righetti" },
+]
+keywords = ["gaussian splatting", "3dgs", "motion planning", "collision checking", "mppi", "rrt", "robotics", "warp"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Intended Audience :: Science/Research",
+]
+dependencies = [
+  "numpy",
+  "scipy",
+  "torch>=2.0",
+  "warp-lang>=1.5",
+  "plyfile",
+]
+
+[project.optional-dependencies]
+render = ["gsplat>=1.4"]
+examples = ["gsplat>=1.4", "opencv-python", "matplotlib", "trimesh", "imageio", "imageio-ffmpeg"]
+dev = ["pytest"]
+
+[project.urls]
+Repository = "https://github.com/machines-in-motion/CollisionSplatting"
+
+[tool.setuptools.packages.find]
+include = ["collisionsplatting*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

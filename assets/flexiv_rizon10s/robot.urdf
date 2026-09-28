@@ -1,0 +1,479 @@
+<?xml version="1.0"?>
+<!-- ======================================================================== -->
+<!-- | Flexiv Rizon 10s (with blurred dynamic parameters)                   | -->
+<!-- ======================================================================== -->
+<robot name="rizon10s">
+
+
+  <!--<compiler meshdir="./meshes/" strippath="false" balanceinertia="true" discardvisual="false"/>-->
+
+
+  <mujoco>
+    <compiler
+    meshdir="meshes"
+    strippath="false"
+    balanceinertia="true"
+    discardvisual="false"
+    convexhull="true" />
+  </mujoco>
+
+
+
+
+  <joint name="joint1" type="revolute">
+    <parent link="base_link" />
+    <child link="link1" />
+    <origin rpy="0.0 0.0 -3.141592653589793" xyz="0.0 0.0 0.21" />
+    <axis xyz="0 0 1" />
+    <limit effort="261" lower="-2.7925" upper="2.7925" velocity="1.7453" />
+  </joint>
+  <joint name="joint2" type="revolute">
+    <parent link="link1" />
+    <child link="link2" />
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0675 0.24" />
+    <axis xyz="0 1 0" />
+    <limit effort="261" lower="-2.6704" upper="2.6704" velocity="1.7453" />
+  </joint>
+  <joint name="joint3" type="revolute">
+    <parent link="link2" />
+    <child link="link3" />
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0625 0.2275" />
+    <axis xyz="0 0 1" />
+    <limit effort="123" lower="-2.7925" upper="2.7925" velocity="2.0944" />
+  </joint>
+  <joint name="joint4" type="revolute">
+    <parent link="link3" />
+    <child link="link4" />
+    <origin rpy="0.0 0.0 -3.141592653589793" xyz="0.0 -0.0625 0.2225" />
+    <axis xyz="0 1 0" />
+    <limit effort="123" lower="-2.7053" upper="2.7053" velocity="2.0944" />
+  </joint>
+  <joint name="joint5" type="revolute">
+    <parent link="link4" />
+    <child link="link5" />
+    <origin rpy="0.0 0.0 -3.141592653589793" xyz="0.0 0.0575 0.205" />
+    <axis xyz="0 0 1" />
+    <limit effort="57" lower="-2.9671" upper="2.9671" velocity="3.8397" />
+  </joint>
+  <joint name="joint6" type="revolute">
+    <parent link="link5" />
+    <child link="link6" />
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.03 0.19" />
+    <axis xyz="0 1 0" />
+    <limit effort="57" lower="-1.3963" upper="4.5379" velocity="3.8397" />
+  </joint>
+  <joint name="joint7" type="revolute">
+    <parent link="link6" />
+    <child link="link7" />
+    <origin rpy="0.0 -1.5707963478683205 0.0" xyz="-0.015 0.073 0.11" />
+    <axis xyz="0 0 1" />
+    <limit effort="57" lower="-2.9671" upper="2.9671" velocity="3.8397" />
+  </joint>
+  <joint name="link7_to_flange" type="fixed">
+    <parent link="link7" />
+    <child link="flange" />
+    <origin rpy="0.0 0.0 -3.141592653589793" xyz="0.0 0.0 0.124" />
+  </joint>
+
+  <link name="base_link">
+    <inertial>
+      <mass value="9.2" />
+      <origin rpy="0 0 0" xyz="0.0 -0.0 0.13" />
+      <inertia ixx="0.08" ixy="0.0" ixz="-0.0" iyy="0.08" iyz="0.0" izz="0.04" />
+    </inertial>
+    <visual name="shell-0">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/visual/base_link.obj" />
+      </geometry>
+      <material name="rizon_dark_grey" />
+    </visual>
+
+    <!--<collision name="hull-0">-->
+    <!--  <origin rpy="0 0 0" xyz="0 0 0" />-->
+    <!--  <geometry>-->
+    <!--    <mesh filename="meshes/collision/c_link0.stl" />-->
+    <!--  </geometry>-->
+    <!--</collision>-->
+
+    <collision name="c_link0.stl">
+      <origin rpy="-3.135731200509898 -0.0070914286865064674 1.7601452401316544" xyz="0.00032891819899692 -0.00036876907392473224 0.07876664364163569"/>
+      <geometry>
+        <cylinder radius="0.10828695195085732" length="0.10862981656370363"/>
+      </geometry>
+    </collision>
+    
+  <collision_checking><capsule name="c_link0.stl"/></collision_checking>
+
+  </link>
+  <link name="link1">
+    <inertial>
+      <mass value="9.7" />
+      <origin rpy="0 0 0" xyz="0.0 0.03 0.16" />
+      <inertia ixx="0.18" ixy="0.0" ixz="0.0" iyy="0.17" iyz="0.02" izz="0.04" />
+    </inertial>
+    <visual name="shell-1">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/visual/link1.obj" />
+      </geometry>
+      <material name="rizon_dark_grey" />
+    </visual>
+    <visual name="ring-1">
+      <origin rpy="0 0 0" xyz="0 0 -0.0025" />
+      <geometry>
+        <mesh filename="meshes/visual/v_ring_s1.obj"  />
+      </geometry>
+      <material name="rizon_white" />
+    </visual>
+
+    <!--<collision name="hull-1">-->
+    <!--  <origin rpy="0 0 0" xyz="0 0 0" />-->
+    <!--  <geometry>-->
+    <!--    <mesh filename="meshes/collision/c_link1.stl" />-->
+    <!--  </geometry>-->
+    <!--</collision>-->
+
+    <collision name="c_link1.stl">
+      <origin rpy="3.1401209981186198 -0.005307839694209449 -2.6006602298211883" xyz="0.00024814527368391225 0.00029127196083683957 0.15303012648186404"/>
+      <geometry>
+        <cylinder radius="0.11" length="0.1820172995965973"/>
+      </geometry>
+    </collision>
+
+  <collision_checking><capsule name="c_link1.stl"/></collision_checking>
+
+
+  </link>
+  <link name="link2">
+    <inertial>
+      <mass value="6.358" />
+      <origin rpy="0 0 0" xyz="0.0 0.03 0.11" />
+      <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.08" iyz="0.02" izz="0.03" />
+    </inertial>
+    <visual name="shell-2">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/visual/link2.obj" />
+      </geometry>
+      <material name="rizon_dark_grey" />
+    </visual>
+    <visual name="ring-2">
+      <origin rpy="1.5707963 0 0" xyz="0 -0.0025 0" />
+      <geometry>
+        <mesh filename="meshes/visual/v_ring_s2.obj"  />
+      </geometry>
+      <material name="rizon_white" />
+    </visual>
+
+    <collision name="c_link2.stl">
+      <origin rpy="-0.04126720865260602 -0.005040524508146377 0.00010401917072817447" xyz="-0.0002424301681967157 0.05976210733104183 0.07367088388281477"/>
+      <geometry>
+        <cylinder radius="0.09838617557444361" length="0.1493152186350586"/>
+      </geometry>
+    </collision>
+
+    <!--<collision name="hull-2">-->
+    <!--  <origin rpy="0 0 0" xyz="0 0 0" />-->
+    <!--  <geometry>-->
+    <!--    <mesh filename="meshes/collision/c_link2.stl" />-->
+    <!--  </geometry>-->
+    <!--</collision>-->
+
+
+  <collision_checking><capsule name="c_link2.stl"/></collision_checking>
+
+
+  </link>
+  <link name="link3">
+    <inertial>
+      <mass value="5.089" />
+      <origin rpy="0 0 0" xyz="0.0 -0.03 0.17" />
+      <inertia ixx="0.04" ixy="-0.0" ixz="-0.0" iyy="0.03" iyz="-0.01" izz="0.01" />
+    </inertial>
+    <visual name="shell-3">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/visual/link3.obj" />
+      </geometry>
+      <material name="rizon_dark_grey" />
+    </visual>
+    <visual name="ring-3">
+      <origin rpy="0 0 0" xyz="0 0 -0.0025" />
+      <geometry>
+        <mesh filename="meshes/visual/v_ring_s3.obj"  />
+      </geometry>
+      <material name="rizon_white" />
+    </visual>
+
+    <!--<collision name="hull-3">-->
+    <!--  <origin rpy="0 0 0" xyz="0 0 0" />-->
+    <!--  <geometry>-->
+    <!--    <mesh filename="meshes/collision/c_link3.stl" />-->
+    <!--  </geometry>-->
+    <!--</collision>-->
+
+    <collision name="c_link3.stl">
+      <origin rpy="-3.110942166794248 0.012942070040906195 -0.7990266024421873" xyz="0.0009435946660551249 -0.003243672501785833 0.13776199595725278"/>
+      <geometry>
+        <cylinder radius="0.08133934809468238" length="0.17962829931741664"/>
+      </geometry>
+    </collision>
+
+
+  <collision_checking><capsule name="c_link3.stl"/></collision_checking>
+
+  </link>
+  <link name="link4">
+    <inertial>
+      <mass value="3.267" />
+      <origin rpy="0 0 0" xyz="-0.0 0.05 0.1" />
+      <inertia ixx="0.03" ixy="0.0" ixz="0.0" iyy="0.03" iyz="0.0" izz="0.01" />
+    </inertial>
+    <visual name="shell-4">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/visual/link4.obj" />
+      </geometry>
+      <material name="rizon_dark_grey" />
+    </visual>
+    <visual name="ring-4">
+      <origin rpy="1.5707963 0 0" xyz="0 -0.0025 0" />
+      <geometry>
+        <mesh filename="meshes/visual/v_ring_s4.obj"  />
+      </geometry>
+      <material name="rizon_white" />
+    </visual>
+
+    <!--<collision name="hull-4">-->
+    <!--  <origin rpy="0 0 0" xyz="0 0 0" />-->
+    <!--  <geometry>-->
+    <!--    <mesh filename="meshes/collision/c_link4.stl" />-->
+    <!--  </geometry>-->
+    <!--</collision>-->
+
+    <collision name="c_link4.stl">
+      <origin rpy="-0.04999599865678187 -0.0068829879926115625 0.00017209745747710214" xyz="-0.0005080457137345763 0.05393072897828459 0.06885405527591208"/>
+      <geometry>
+        <cylinder radius="0.08058945288499701" length="0.14050029766613556"/>
+      </geometry>
+    </collision>
+
+  <collision_checking><capsule name="c_link4.stl"/></collision_checking>
+
+  </link>
+  <link name="link5">
+    <inertial>
+      <mass value="2.498" />
+      <origin rpy="0 0 0" xyz="0.0 0.01 0.13" />
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.001" />
+    </inertial>
+    <visual name="shell-5">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/visual/link5.obj" />
+      </geometry>
+      <material name="rizon_dark_grey" />
+    </visual>
+    <visual name="ring-5">
+      <origin rpy="0 0 0" xyz="0 0 -0.0025" />
+      <geometry>
+        <mesh filename="meshes/visual/v_ring_s5.obj"  />
+      </geometry>
+      <material name="rizon_white" />
+    </visual>
+
+    <!--<collision name="hull-5">-->
+    <!--  <origin rpy="0 0 0" xyz="0 0 0" />-->
+    <!--  <geometry>-->
+    <!--    <mesh filename="meshes/collision/c_link5.stl" />-->
+    <!--  </geometry>-->
+    <!--</collision>-->
+
+    <collision name="c_link5.stl">
+      <origin rpy="-3.062942439795058 0.0025142117447503054 -0.06387935132241074" xyz="0.0002143888046636051 -0.0062263048590413045 0.1148623027407365"/>
+      <geometry>
+        <cylinder radius="0.06321103718614053" length="0.1586607128833286"/>
+      </geometry>
+    </collision>
+
+  <collision_checking><capsule name="c_link5.stl"/></collision_checking>
+
+  </link>
+  <link name="link6">
+    <inertial>
+      <mass value="2.340" />
+      <origin rpy="0 0 0" xyz="0.02 0.06 0.07" />
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.001" />
+    </inertial>
+    <visual name="shell-6">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/visual/link6.obj" />
+      </geometry>
+      <material name="rizon_dark_grey" />
+    </visual>
+    <visual name="ring-6">
+      <origin rpy="1.5707963 0 0" xyz="0 -0.0025 0" />
+      <geometry>
+        <mesh filename="meshes/visual/v_ring_s6.obj"  />
+      </geometry>
+      <material name="rizon_white" />
+    </visual>
+
+
+    <!--<collision name="hull-6">-->
+    <!--  <origin rpy="0 0 0" xyz="0 0 0" />-->
+    <!--  <geometry>-->
+    <!--    <mesh filename="meshes/collision/c_link6.stl" />-->
+    <!--  </geometry>-->
+    <!--</collision>-->
+
+    <collision name="c_link6.stl">
+      <origin rpy="2.8107047832724485 -0.3512021488559727 -1.6315119697149592" xyz="0.02153718931005263 0.056258354575723396 0.059821353702356424"/>
+      <geometry>
+        <cylinder radius="0.07271170783548435" length="0.1132427653650164"/>
+      </geometry>
+    </collision>
+
+  <collision_checking><capsule name="c_link6.stl"/></collision_checking>
+
+
+
+  </link>
+  <link name="link7">
+    <inertial>
+      <mass value="1.568" />
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.05" />
+      <!--note: i changed inertia from 0.01 to 0.001 because mujoco simulation was unstable-->
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01" />
+    </inertial>
+    <visual name="shell-7">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/visual/link7.obj" />
+      </geometry>
+      <material name="rizon_dark_grey" />
+    </visual>
+    <visual name="ring-7">
+      <origin rpy="0 0 0" xyz="0 0 -0.0025" />
+      <geometry>
+        <mesh filename="meshes/visual/v_ring_s7.obj"  />
+      </geometry>
+      <material name="rizon_white" />
+    </visual>
+
+
+    <!--<collision name="hull-7">-->
+    <!--  <origin rpy="0 0 0" xyz="0 0 0" />-->
+    <!--  <geometry>-->
+    <!--    <mesh filename="meshes/collision/c_link7.stl" />-->
+    <!--  </geometry>-->
+    <!--</collision>-->
+
+
+    <collision name="c_link7.stl">
+      <origin rpy="0.0004100094101540108 -0.0007421483351071068 -1.5214390947093648e-07" xyz="3.4338789721404413e-06 0.00010384113989505138 0.05293979816513525"/>
+      <geometry>
+        <cylinder radius="0.05225879509988878" length="0.08200182317353522"/>
+      </geometry>
+    </collision>
+
+  <collision_checking><capsule name="c_link7.stl"/></collision_checking>
+
+
+  </link>
+  <link name="flange" >
+   <inertial>
+      <mass value="1.209" />
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.057" />
+      <inertia ixx="0.03" ixy="0.0" ixz="0.0" iyy="0.03" iyz="0.0" izz="0.01" />
+    </inertial>
+
+    <collision name="gripper_capsule">
+      <origin rpy="0 0 0 " xyz="0 0 .1"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.15"/>
+      </geometry>
+    </collision>
+
+  <collision_checking><capsule name="gripper_capsule"/></collision_checking>
+
+  </link>
+
+  <link name="tcp" />
+
+  <joint name="flange_to_tcp" type="fixed">
+    <parent link="flange" />
+    <child link="tcp" />
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.2" />
+  </joint>
+
+
+  <link name="table">
+    <visual>
+      <geometry>
+	<box  size="2 2 .2"/>
+      </geometry>
+      <material name="custom">
+        <color rgba="0.8 0.7 0.7 0.5"/>
+      </material>
+    </visual>
+
+
+    <collision>
+      <geometry>
+	<box  size="2 2 .2"/>
+      </geometry>
+      <material name="brown"/>
+    </collision>
+
+
+  </link>
+
+  <joint name="table_j" type="fixed">
+    <parent link="base_link"/>
+    <child link="table"/>
+ <origin rpy="0. 0 0." xyz="0 0 -0.11"/>
+  </joint>
+
+
+  <link name="wall">
+    <visual>
+      <geometry>
+	<box  size=".2 2 2"/>
+      </geometry>
+      <material name="custom">
+        <color rgba="0.8 0.7 0.7 0.5"/>
+      </material>
+    </visual>
+
+
+    <collision>
+      <geometry>
+	<box  size=".2 2 2"/>
+      </geometry>
+      <material name="brown"/>
+    </collision>
+
+
+  </link>
+
+  <joint name="wall_j" type="fixed">
+    <parent link="base_link"/>
+    <child link="wall"/>
+ <origin rpy="0. 0 0." xyz="-.4 0 0"/>
+  </joint>
+
+
+
+  <material name="rizon_light_grey">
+    <color rgba="0.7 0.7 0.7 1.0" />
+  </material>
+  <material name="rizon_dark_grey">
+    <color rgba="0.4 0.4 0.4 1.0" />
+  </material>
+  <material name="rizon_white">
+    <color rgba="1.0 1.0 1.0 1.0" />
+  </material>
+</robot>
