@@ -6,6 +6,8 @@
 
 *IROS 2026* &nbsp;·&nbsp; Rooholla Khorrambakht, Joaquim Ortiz-Haro, Stephan Weiss, Ludovic Righetti
 
+[**Project page**](https://machines-in-motion.github.io/CollisionSplatting/) &nbsp;|&nbsp; [**Paper (PDF)**](https://machines-in-motion.github.io/CollisionSplatting/paper.pdf)
+
 <img src="docs/media/mppi_navigation.webp" width="720" alt="Receding-horizon MPPI with the CollisionSplatting cost in a generated 3DGS library"/>
 
 <sub>Receding-horizon MPPI (512 rollouts per step) scored with the CollisionSplatting cost directly on the raw 3DGS export of a <b>generated</b> library (World Labs Marble; simulated robot) — no mesh, no retraining.</sub>
