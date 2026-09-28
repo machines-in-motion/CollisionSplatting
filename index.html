@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CollisionSplatting — collision-aware planning directly on 3D Gaussian Splatting scenes</title>
+  <meta name="description" content="CollisionSplatting is a fast, memory-light GPU collision kernel with tunable conservatism that enables collision-aware planning and real-time control directly on standard 3DGS scenes, with no mesh conversion required. IROS 2026.">
+  <meta property="og:title" content="CollisionSplatting (IROS 2026)">
+  <meta property="og:description" content="Collision-aware planning and control directly on standard 3D Gaussian Splatting scenes, with no mesh conversion required.">
+  <meta property="og:image" content="static/videos/mppi_navigation.jpg?v=2">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cellipse cx='32' cy='32' rx='26' ry='13' transform='rotate(-30 32 32)' fill='%2357068c'/%3E%3Ccircle cx='46' cy='44' r='7' fill='%231fa7d6'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="logos">
+      <img src="static/images/nyu_logo.png" alt="New York University" class="logo-nyu">
+      <img src="static/images/mim_logo.png" alt="Machines in Motion Laboratory" class="logo-mim">
+    </div>
+    <h1 class="wordmark">CollisionSplatting</h1>
+    <p class="paper-title">Collision-Aware Motion Planning in 3DGS Scenes with Image-Conditioned Objectives and Adjustable Conservatism</p>
+    <p class="authors">
+      <a href="#">Rooholla Khorrambakht</a><sup>1</sup>,
+      <a href="#">Joaquim Ortiz-Haro</a><sup>1</sup>,
+      <a href="#">Stephan Weiss</a><sup>3</sup>,
+      <a href="#">Ludovic Righetti</a><sup>1,2</sup>
+    </p>
+    <p class="affiliations"><sup>1</sup>New York University, Machines in Motion Laboratory &emsp; <sup>2</sup>ANITI, Toulouse &emsp; <sup>3</sup>University of Klagenfurt</p>
+    <p class="venue">IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) 2026</p>
+    <nav class="actions" aria-label="Paper resources">
+      <a class="btn" href="paper.pdf">Read the paper</a>
+      <a class="btn" href="https://github.com/machines-in-motion/CollisionSplatting">Get the code</a>
+      <a class="btn" href="#conservatism">Watch the videos</a>
+      <a class="btn btn-quiet" href="#citation">Cite</a>
+    </nav>
+  </div>
+  <figure class="media wide hero-video">
+    <video autoplay muted loop playsinline preload="auto" poster="static/videos/mppi_navigation.jpg?v=2">
+      <source src="static/videos/mppi_navigation.mp4?v=2" type="video/mp4">
+    </video>
+    <figcaption>Receding-horizon MPPI steers a simulated ground robot through a <em>generated</em> library from World Labs' Marble. At every step 512 rollouts (thin lines) are scored with the CollisionSplatting cost directly on the raw splats: no mesh, no retraining.</figcaption>
+  </figure>
+</header>
+
+<main>
+  <section class="wrap lede">
+    <h2>TL;DR</h2>
+    <p>CollisionSplatting is a fast, memory-light GPU collision kernel with tunable conservatism that enables collision-aware planning and real-time control directly on standard 3DGS scenes — from SfM/SLAM captures to generative 3D worlds — with no mesh conversion required.</p>
+  </section>
+
+  <section class="wrap" id="abstract">
+    <h2>Abstract</h2>
+    <p>Incorporating dense visual information into motion planning remains challenging, as geometric planners rely on abstracted scene representations that discard visual richness, while learned visual models often lack geometric interpretability and computational efficiency. This paper introduces CollisionSplatting, a simple, modular, GPU-accelerated, probability-inspired distance metric with tunable conservatism that operates directly on standard 3D Gaussian Splatting (3DGS) scenes. When combined with learned image-conditioned reward functions, this metric enables joint geometric and visual planning by unifying collision-aware costs with image-space objectives. We integrate the metric into GPU-accelerated Model Predictive Path Integral (MPPI) and Rapidly-Exploring Random Tree (RRT) planners, and show on-par or better collision-classification performance compared to representative baselines while achieving substantially higher collision-checking throughput and significantly lower VRAM usage. Finally, we demonstrate the effectiveness of our metric in real-world vision-guided navigation and manipulation tasks, highlighting 3DGS as a practical bridge between rich perception and real-time motion planning.</p>
+  </section>
+
+  <section class="wrap" id="why">
+    <h2>Plan on the splats, not on a mesh</h2>
+    <p>Gaussian splats have become how we capture, and increasingly generate, photorealistic 3D worlds. Yet simulators and planners still attach a separate collision mesh to them, built from LiDAR, from artists' models, or as a coarse approximation. Phone captures and generated worlds often have none of these, and a mesh throws away how uncertain each part of the reconstruction is.</p>
+    <div class="pipelines" role="img" aria-label="Two pipelines. Common practice: 3DGS scene, then mesh or SDF extraction, then planner. CollisionSplatting: 3DGS scene, then CollisionSplatting, then planner.">
+      <div class="pipe pipe-old">
+        <span>3DGS scene</span><span class="arrow" aria-hidden="true"></span><span>mesh / SDF extraction</span><span class="arrow" aria-hidden="true"></span><span>planner</span>
+      </div>
+      <p class="pipe-note">Needs extra sensors or authoring; lossy; no notion of uncertainty.</p>
+      <div class="pipe pipe-new">
+        <span>3DGS scene</span><span class="arrow" aria-hidden="true"></span><span class="ours">CollisionSplatting</span><span class="arrow" aria-hidden="true"></span><span>planner</span>
+      </div>
+      <p class="pipe-note">Raw splats in, distances and costs out, in one GPU kernel.</p>
+    </div>
+  </section>
+
+  <section class="wrap" id="method">
+    <h2>Treat every splat as an uncertain obstacle</h2>
+    <p>The robot is a set of ellipsoids. For each nearby splat, the kernel measures how deep the splat's centre sits inside a robot link, then propagates the splat's covariance through that distance to the first order. Subtracting \(n_\sigma\) standard deviations gives a conservative distance:</p>
+    <div class="equations">
+      <div>\[ s^2_{ij} = (\mu_i - c_j)^\top A_j\, (\mu_i - c_j) \]<span class="eq-label">scaling distance of splat \(i\) to link \(j\); below 1 means inside</span></div>
+      <div>\[ \sigma^2_{ij} = \nabla s^{2\,\top}_{ij}\, \Sigma_i\, \nabla s^2_{ij} \]<span class="eq-label">linearized uncertainty from the splat's covariance</span></div>
+      <div>\[ \tilde s^2_{ij} = \max\!\big(0,\; s^2_{ij} - n_\sigma\, \sigma_{ij}\big) \]<span class="eq-label">conservative distance; a collision is \(\tilde s^2 < 1\)</span></div>
+    </div>
+    <p>Distances are gathered with a spatial hash grid and folded into a streaming soft-minimum, so every query keeps a constant amount of state and no query-by-splat tensor is ever stored. \(n_\sigma = 0\) reduces to a plain point-cloud check.</p>
+
+    <figure class="explorer" id="explorer">
+      <svg viewBox="-3 -2 6 4" role="img" aria-labelledby="explorer-title explorer-desc">
+        <title id="explorer-title">Keep-out region of one splat</title>
+        <desc id="explorer-desc">An elongated Gaussian splat with the region a spherical robot's centre must avoid. The region grows along the splat's long axis as n sigma increases.</desc>
+        <defs>
+          <radialGradient id="splatfill">
+            <stop offset="0%" stop-color="#57068c" stop-opacity="0.55"/>
+            <stop offset="60%" stop-color="#57068c" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="#57068c" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <path id="keepout" class="keepout"/>
+        <circle id="baseline" class="baseline" r="0.4"/>
+        <g id="splat"><ellipse rx="1.8" ry="0.6" fill="url(#splatfill)"/><ellipse rx="0.6" ry="0.2" class="sigma-ring"/><ellipse rx="1.2" ry="0.4" class="sigma-ring"/></g>
+        <circle id="robot" class="robot" r="0.4" tabindex="0" role="slider" aria-label="Robot position, drag or use arrow keys"/>
+        <circle id="robot-center" class="robot-center" r="0.04"/>
+      </svg>
+      <div class="explorer-controls">
+        <label for="nsigma">Conservatism \(n_\sigma\) <output id="nsigma-out">1.0</output></label>
+        <input id="nsigma" type="range" min="0" max="3" step="0.1" value="1">
+        <p class="readout" id="readout" aria-live="polite"></p>
+        <p class="hint">Drag the cyan robot (or focus it and use the arrow keys). The violet splat has a long axis three times its short one (rings at 1σ and 2σ). The dashed circle is the keep-out region of a point obstacle; the shaded region is where the robot's centre must not go at the chosen \(n_\sigma\). It grows most along the splat's long axis, where the reconstruction is least certain.</p>
+      </div>
+    </figure>
+  </section>
+
+  <section class="wrap" id="conservatism">
+    <h2>One knob for caution</h2>
+    <p>Raising \(n_\sigma\) inflates splats in proportion to their uncertainty. With the same start, goal and random seed on 3DGS Stonehenge, the planner slips through a narrow gap at \(n_\sigma = 0\); at \(n_\sigma = 2\) the gap closes and it goes around.</p>
+    <figure class="media wide">
+      <video autoplay muted loop playsinline preload="metadata" poster="static/videos/conservatism.jpg?v=2"><source src="static/videos/conservatism.mp4?v=2" type="video/mp4"></video>
+      <figcaption>Left \(n_\sigma = 0\), right \(n_\sigma = 2\): path length 0.85 vs 1.46 (straight line 0.71), clearance to the nearest splat centre 1.6% vs 2.9% of the scene.</figcaption>
+    </figure>
+    <p>The same mechanism makes the robot automatically more careful where the reconstruction is poor. Poorly observed regions are represented by larger Gaussians, which carry a larger \(\sigma\).</p>
+    <figure class="media wide">
+      <video muted loop playsinline preload="none" poster="static/videos/scale_study.jpg?v=2" data-autoplay-visible><source src="static/videos/scale_study.mp4?v=2" type="video/mp4"></video>
+      <figcaption>The same query on the finest (left) and coarsest (right) Stonehenge reconstruction: the path through the gap on the fine model becomes a detour on the coarse one.</figcaption>
+    </figure>
+  </section>
+
+  <section class="wrap" id="results">
+    <h2>As accurate as the baselines, orders of magnitude cheaper</h2>
+    <p>We compare against Splat-Nav, SAFER-Splat, ATLASNav and SPLANNING on a grid of collision queries in the Stonehenge scene (about 200k splats), with a mesh as ground truth. CollisionSplatting classifies collisions on par with the baselines and better than ATLASNav, while using <strong>0.16 GB</strong> of GPU memory where the batched baselines need <strong>14.5 to 55 GB</strong>, and running about <strong>1.6 million checks per second</strong> on one GPU.</p>
+    <div class="figure-pair">
+      <figure><img src="static/images/pr_curve.png" alt="Precision-recall curves of CollisionSplatting and four baselines" loading="lazy" width="1935" height="1533"><figcaption>Precision and recall of collision classification against the mesh ground truth.</figcaption></figure>
+      <figure><img src="static/images/throughput_memory.png" alt="Bar charts of GPU memory and collision checks per second for each method" loading="lazy"><figcaption>GPU memory and throughput (paper Table I; log scales). ATLASNav is our reimplementation.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="wrap" id="image-goals">
+    <h2>Image goals and collisions in one MPPI loop</h2>
+    <p>Because the scene stays a renderable 3DGS, each sampled trajectory can be scored by what the robot would <em>see</em>. We render the camera view at the end of every MPPI rollout and compare DINOv2 features with a goal image, while CollisionSplatting adds the collision cost in the same batch.</p>
+    <figure class="media narrow"><img src="static/images/system_overview.png" alt="System diagram: planner, 3DGS dynamics and rasterizer, DINOv2 image cost and CollisionSplatting costs" loading="lazy"></figure>
+    <figure class="media wide">
+      <video muted loop playsinline preload="none" poster="static/videos/flexiv_image_goal_mppi.jpg?v=2" data-autoplay-visible><source src="static/videos/flexiv_image_goal_mppi.mp4?v=2" type="video/mp4"></video>
+      <figcaption>Reaching a book inside a crate from a goal image (simulated rerun in the lab scene). Without the collision cost the end effector enters the crate; with it, it stays clear. Over five goal images in the paper: −2.1 cm (penetration) without vs +1.7 cm clearance with the cost.</figcaption>
+    </figure>
+    <p>On the real robots, the Flexiv arm runs this MPPI at 5 Hz, and a Go2 quadruped finds an object from an image by searching a batched RRT tree for the most similar rendered view, then drives there with collision-aware MPPI.</p>
+    <figure class="media wide"><img src="static/images/manipulation-demo.jpg" alt="Flexiv arm reaching a goal image inside a crate: point cloud with planned rollouts and camera frames" loading="lazy"><figcaption>Flexiv Rizon 10s: collision-aware visual target reaching.</figcaption></figure>
+    <figure class="media wide"><img src="static/images/Semantic-RRT.jpg" alt="Batched RRT trees in the lab point cloud with paths to five image-defined objects" loading="lazy"><figcaption>Go2: collision-free paths to objects given only by an image (sofa, tripod, robot, heater, whiteboard).</figcaption></figure>
+    <figure class="media wide"><img src="static/images/locomotion.jpg" alt="Go2 quadruped navigating the lab around furniture" loading="lazy"><figcaption>Go2: collision-aware MPPI tracks the retrieved goal around obstacles.</figcaption></figure>
+  </section>
+
+  <section class="wrap" id="any-3dgs">
+    <h2>Works on any standard 3DGS scene</h2>
+    <p>The kernel reads the per-splat parameters every 3DGS exporter writes, so the same code runs on SfM captures, public datasets and generative world models. These worlds are raw exports from World Labs' Marble, planned on without retraining.</p>
+    <div class="video-pair">
+      <figure><video muted loop playsinline preload="none" poster="static/videos/library_rrt.jpg?v=2" data-autoplay-visible><source src="static/videos/library_rrt.mp4?v=2" type="video/mp4"></video><figcaption>A ground robot threads between bookshelves and armchairs (RRT, 0.8 s).</figcaption></figure>
+      <figure><video muted loop playsinline preload="none" poster="static/videos/hero_marble_kitchen.jpg?v=2" data-autoplay-visible><source src="static/videos/hero_marble_kitchen.mp4?v=2" type="video/mp4"></video><figcaption>A batched GPU RRT plans for a flying robot in a generated kitchen (0.18 s).</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="wrap" id="code">
+    <h2>Try it</h2>
+    <p>The code is a pip-installable Python package with a batched RRT, an MPPI planner, URDF kinematics for ellipsoid robots, and examples that download public Marble worlds.</p>
+<pre class="code"><code>git clone https://github.com/machines-in-motion/CollisionSplatting.git
+cd CollisionSplatting && pip install -e ".[examples]"
+python examples/02_rrt_marble.py</code></pre>
+  </section>
+
+  <section class="wrap" id="citation">
+    <h2>Citation</h2>
+    <div class="bibtex">
+      <button type="button" class="copy" data-copy="#bibtex">Copy BibTeX</button>
+<pre id="bibtex"><code>@inproceedings{khorrambakht2026collisionsplatting,
+  title     = {CollisionSplatting: Collision-Aware Motion Planning in 3DGS Scenes
+               with Image-Conditioned Objectives and Adjustable Conservatism},
+  author    = {Khorrambakht, Rooholla and Ortiz-Haro, Joaquim and
+               Weiss, Stephan and Righetti, Ludovic},
+  booktitle = {IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
+  year      = {2026}
+}</code></pre>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>Example worlds are public samples from <a href="https://marble.worldlabs.ai">World Labs Marble</a>. Built with <a href="https://github.com/NVIDIA/warp">NVIDIA Warp</a> and <a href="https://github.com/nerfstudio-project/gsplat">gsplat</a>.</p>
+</footer>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script defer src="static/js/main.js"></script>
+</body>
+</html>
