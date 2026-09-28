@@ -6,9 +6,9 @@
 
 *IROS 2026* &nbsp;·&nbsp; Rooholla Khorrambakht, Joaquim Ortiz-Haro, Stephan Weiss, Ludovic Righetti
 
-<img src="docs/media/hero_marble_rrt.webp" width="720" alt="GPU RRT planned directly on the raw splats of a generated 3DGS kitchen"/>
+<img src="docs/media/mppi_navigation.webp" width="720" alt="Receding-horizon MPPI with the CollisionSplatting cost in a generated 3DGS library"/>
 
-<sub>A batched GPU RRT planning directly on the raw 3DGS export of a <b>generated</b> world (World Labs Marble) — no mesh, no retraining.</sub>
+<sub>Receding-horizon MPPI (512 rollouts per step) scored with the CollisionSplatting cost directly on the raw 3DGS export of a <b>generated</b> library (World Labs Marble; simulated robot) — no mesh, no retraining.</sub>
 
 </div>
 
@@ -99,7 +99,7 @@ Marble sample worlds are fetched on demand from World Labs' public CDN
 <table>
 <tr>
 <td align="center"><img src="docs/media/flexiv_image_goal_mppi.gif" width="440"/><br><sub>Image-goal MPPI for a Flexiv Rizon 10s in the lab scene (simulated rerun): without the collision cost the end effector enters the crate; with it, it stays clear.</sub></td>
-<td align="center"><img src="docs/media/mppi_navigation.webp" width="400"/><br><sub>Receding-horizon MPPI (512 rollouts × 25 steps per step) with the CollisionSplatting cost in a generated library (simulated ground robot).</sub></td>
+<td align="center"><img src="docs/media/hero_marble_rrt.webp" width="400"/><br><sub>A batched GPU RRT planning for a flying robot in a generated kitchen (World Labs Marble).</sub></td>
 </tr>
 </table>
 
